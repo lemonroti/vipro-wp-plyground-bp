@@ -1,0 +1,94 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "landingPage": "/wp-admin/",
+  "preferredVersions": {
+    "php": "8.2",
+    "wp": "latest"
+  },
+  "features": {
+    "networking": true
+  },
+  "plugins": [
+    "woocommerce",
+    "slim-seo"
+  ],
+  "steps": [
+    {
+      "step": "defineWpConfigConsts",
+      "consts": {
+        "WP_DEBUG": false,
+        "WP_DEBUG_LOG": false
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "woocommerce"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "slim-seo"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "wordpress-importer"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "setSiteOptions",
+      "options": {
+        "blogname": "WooCommerce Demo Store",
+        "woocommerce_store_address": "123 Demo Street",
+        "woocommerce_store_city": "San Francisco",
+        "woocommerce_default_country": "US:CA",
+        "woocommerce_store_postcode": "94103",
+        "woocommerce_currency": "USD",
+        "woocommerce_product_type": "both",
+        "woocommerce_allow_tracking": "no",
+        "woocommerce_onboarding_profile": "{\"skipped\":true}",
+        "woocommerce_task_list_hidden": "yes",
+        "woocommerce_task_list_complete": "yes",
+        "woocommerce_extended_task_list_hidden": "yes",
+        "woocommerce_setup_wizard_redirect": "0",
+        "woocommerce_admin_notices": "[]",
+        "woocommerce_show_marketplace_suggestions": "no",
+        "_wc_needs_pages": "no",
+        "wc_admin_install_timestamp": "1",
+        "fresh_site": "0"
+      }
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php\nrequire '/wordpress/wp-load.php';\n\n// Mark WooCommerce onboarding as complete\nupdate_option('woocommerce_onboarding_profile', array(\n    'skipped' => true,\n    'completed' => true,\n    'business_extensions' => array(),\n    'industry' => array(),\n    'product_types' => array(),\n    'product_count' => '0',\n    'selling_venues' => 'no',\n    'setup_client' => false,\n));\n\n// Hide all task lists\nupdate_option('woocommerce_task_list_hidden', 'yes');\nupdate_option('woocommerce_task_list_complete', 'yes');\nupdate_option('woocommerce_extended_task_list_hidden', 'yes');\nupdate_option('woocommerce_admin_notices', array());\nupdate_option('woocommerce_show_marketplace_suggestions', 'no');\n\n// Disable redirect to setup wizard\ndelete_transient('_wc_activation_redirect');\nupdate_option('woocommerce_setup_wizard_redirect', '0');\n\n// Mark WooCommerce as properly installed\nupdate_option('wc_admin_install_timestamp', time());\n\necho 'WooCommerce setup wizard skipped successfully.';\n"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php\nrequire '/wordpress/wp-load.php';\n\n// WooCommerce sample products data - core products from WooCommerce sample data\n$sample_products = array(\n    array(\n        'name' => 'Hoodie',\n        'type' => 'variable',\n        'regular_price' => '',\n        'description' => 'This is a variable product with color and size attributes.',\n        'short_description' => 'Comfortable cotton hoodie.',\n        'categories' => array('Hoodies'),\n        'images' => array(),\n        'attributes' => array(\n            array('name' => 'Color', 'options' => array('Blue', 'Green', 'Red'), 'visible' => true, 'variation' => true),\n            array('name' => 'Size', 'options' => array('Small', 'Medium', 'Large'), 'visible' => true, 'variation' => true)\n        )\n    ),\n    array(\n        'name' => 'T-Shirt',\n        'type' => 'simple',\n        'regular_price' => '18.00',\n        'description' => 'Classic cotton t-shirt in various colors.',\n        'short_description' => 'Quality cotton t-shirt.',\n        'categories' => array('Tshirts'),\n        'sku' => 'woo-tshirt'\n    ),\n    array(\n        'name' => 'Beanie',\n        'type' => 'simple',\n        'regular_price' => '20.00',\n        'description' => 'Warm and stylish beanie for cold weather.',\n        'short_description' => 'Warm beanie hat.',\n        'categories' => array('Accessories'),\n        'sku' => 'woo-beanie'\n    ),\n    array(\n        'name' => 'Belt',\n        'type' => 'simple',\n        'regular_price' => '65.00',\n        'sale_price' => '55.00',\n        'description' => 'Genuine leather belt with metal buckle.',\n        'short_description' => 'Leather belt.',\n        'categories' => array('Accessories'),\n        'sku' => 'woo-belt'\n    ),\n    array(\n        'name' => 'Cap',\n        'type' => 'simple',\n        'regular_price' => '18.00',\n        'description' => 'Classic baseball cap.',\n        'short_description' => 'Baseball cap.',\n        'categories' => array('Accessories'),\n        'sku' => 'woo-cap'\n    ),\n    array(\n        'name' => 'Sunglasses',\n        'type' => 'simple',\n        'regular_price' => '90.00',\n        'description' => 'Stylish sunglasses with UV protection.',\n        'short_description' => 'UV protection sunglasses.',\n        'categories' => array('Accessories'),\n        'sku' => 'woo-sunglasses'\n    ),\n    array(\n        'name' => 'Hoodie with Logo',\n        'type' => 'simple',\n        'regular_price' => '45.00',\n        'description' => 'Premium hoodie with embroidered logo.',\n        'short_description' => 'Hoodie with logo.',\n        'categories' => array('Hoodies'),\n        'sku' => 'woo-hoodie-with-logo'\n    ),\n    array(\n        'name' => 'T-Shirt with Logo',\n        'type' => 'simple',\n        'regular_price' => '25.00',\n        'description' => 'Premium t-shirt with printed logo.',\n        'short_description' => 'T-shirt with logo.',\n        'categories' => array('Tshirts'),\n        'sku' => 'woo-tshirt-with-logo'\n    ),\n    array(\n        'name' => 'Single',\n        'type' => 'simple',\n        'regular_price' => '3.00',\n        'description' => 'This is a simple, virtual product.',\n        'short_description' => 'Virtual product.',\n        'categories' => array('Music'),\n        'sku' => 'woo-single',\n        'virtual' => true\n    ),\n    array(\n        'name' => 'Album',\n        'type' => 'simple',\n        'regular_price' => '15.00',\n        'description' => 'Full music album - digital download.',\n        'short_description' => 'Digital album.',\n        'categories' => array('Music'),\n        'sku' => 'woo-album',\n        'virtual' => true,\n        'downloadable' => true\n    ),\n    array(\n        'name' => 'Polo',\n        'type' => 'simple',\n        'regular_price' => '35.00',\n        'description' => 'Classic polo shirt in premium cotton.',\n        'short_description' => 'Cotton polo shirt.',\n        'categories' => array('Tshirts'),\n        'sku' => 'woo-polo'\n    ),\n    array(\n        'name' => 'Long Sleeve Tee',\n        'type' => 'simple',\n        'regular_price' => '25.00',\n        'description' => 'Comfortable long sleeve t-shirt.',\n        'short_description' => 'Long sleeve tee.',\n        'categories' => array('Tshirts'),\n        'sku' => 'woo-long-sleeve-tee'\n    ),\n    array(\n        'name' => 'Hoodie with Pocket',\n        'type' => 'simple',\n        'regular_price' => '45.00',\n        'description' => 'Comfortable hoodie with front pocket.',\n        'short_description' => 'Hoodie with pocket.',\n        'categories' => array('Hoodies'),\n        'sku' => 'woo-hoodie-with-pocket'\n    ),\n    array(\n        'name' => 'Hoodie with Zipper',\n        'type' => 'simple',\n        'regular_price' => '45.00',\n        'description' => 'Hoodie with full-length zipper.',\n        'short_description' => 'Zip-up hoodie.',\n        'categories' => array('Hoodies'),\n        'sku' => 'woo-hoodie-with-zipper'\n    ),\n    array(\n        'name' => 'V-Neck T-Shirt',\n        'type' => 'simple',\n        'regular_price' => '18.00',\n        'description' => 'Classic v-neck t-shirt.',\n        'short_description' => 'V-neck tee.',\n        'categories' => array('Tshirts'),\n        'sku' => 'woo-vneck-tee'\n    )\n);\n\n// Create product categories first\n$category_ids = array();\n$categories = array('Hoodies', 'Tshirts', 'Accessories', 'Music');\n\nforeach ($categories as $cat_name) {\n    $term = term_exists($cat_name, 'product_cat');\n    if (!$term) {\n        $term = wp_insert_term($cat_name, 'product_cat');\n    }\n    if (!is_wp_error($term)) {\n        $category_ids[$cat_name] = is_array($term) ? $term['term_id'] : $term;\n    }\n}\n\n// Create products\n$created_count = 0;\nforeach ($sample_products as $product_data) {\n    // Check if product already exists\n    $existing = get_page_by_title($product_data['name'], OBJECT, 'product');\n    if ($existing) {\n        continue;\n    }\n    \n    $product_type = isset($product_data['type']) ? $product_data['type'] : 'simple';\n    \n    if ($product_type === 'variable') {\n        $product = new WC_Product_Variable();\n    } else {\n        $product = new WC_Product_Simple();\n    }\n    \n    $product->set_name($product_data['name']);\n    $product->set_status('publish');\n    $product->set_catalog_visibility('visible');\n    $product->set_description($product_data['description']);\n    $product->set_short_description($product_data['short_description']);\n    \n    if (isset($product_data['regular_price']) && $product_data['regular_price']) {\n        $product->set_regular_price($product_data['regular_price']);\n    }\n    if (isset($product_data['sale_price'])) {\n        $product->set_sale_price($product_data['sale_price']);\n    }\n    if (isset($product_data['sku'])) {\n        $product->set_sku($product_data['sku']);\n    }\n    if (isset($product_data['virtual']) && $product_data['virtual']) {\n        $product->set_virtual(true);\n    }\n    if (isset($product_data['downloadable']) && $product_data['downloadable']) {\n        $product->set_downloadable(true);\n    }\n    \n    // Set stock\n    $product->set_manage_stock(true);\n    $product->set_stock_quantity(100);\n    $product->set_stock_status('instock');\n    \n    // Set categories\n    if (isset($product_data['categories'])) {\n        $cat_ids = array();\n        foreach ($product_data['categories'] as $cat_name) {\n            if (isset($category_ids[$cat_name])) {\n                $cat_ids[] = $category_ids[$cat_name];\n            }\n        }\n        $product->set_category_ids($cat_ids);\n    }\n    \n    $product_id = $product->save();\n    \n    // Handle variable products with variations\n    if ($product_type === 'variable' && isset($product_data['attributes'])) {\n        $attributes = array();\n        foreach ($product_data['attributes'] as $attr_data) {\n            $attribute = new WC_Product_Attribute();\n            $attribute->set_name($attr_data['name']);\n            $attribute->set_options($attr_data['options']);\n            $attribute->set_visible($attr_data['visible']);\n            $attribute->set_variation($attr_data['variation']);\n            $attributes[] = $attribute;\n        }\n        $product->set_attributes($attributes);\n        $product->save();\n        \n        // Create variations\n        $base_price = 45.00;\n        $colors = array('Blue', 'Green', 'Red');\n        $sizes = array('Small', 'Medium', 'Large');\n        \n        foreach ($colors as $color) {\n            foreach ($sizes as $size) {\n                $variation = new WC_Product_Variation();\n                $variation->set_parent_id($product_id);\n                $variation->set_attributes(array(\n                    'color' => $color,\n                    'size' => $size\n                ));\n                $variation->set_regular_price($base_price);\n                $variation->set_manage_stock(true);\n                $variation->set_stock_quantity(50);\n                $variation->set_stock_status('instock');\n                $variation->save();\n            }\n        }\n    }\n    \n    $created_count++;\n}\n\necho \"Created $created_count WooCommerce sample products successfully!\";\n"
+    },
+    {
+      "step": "runPHP",
+      "code": "<?php\nrequire '/wordpress/wp-load.php';\n\n// Create WooCommerce pages if they don't exist\nif (function_exists('WC')) {\n    // Ensure WooCommerce pages are created\n    WC_Install::create_pages();\n    \n    // Flush rewrite rules\n    flush_rewrite_rules();\n    \n    echo 'WooCommerce pages created successfully.';\n} else {\n    echo 'WooCommerce not loaded yet.';\n}\n"
+    },
+    {
+      "step": "login",
+      "username": "admin",
+      "password": "password"
+    }
+  ]
+}
