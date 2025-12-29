@@ -2,7 +2,7 @@
   "$schema": "https://playground.wordpress.net/blueprint-schema.json",
   "landingPage": "/wp-admin/",
   "preferredVersions": {
-    "php": "8.2",
+    "php": "8.3",
     "wp": "latest"
   },
   "features": {
@@ -10,7 +10,8 @@
   },
   "plugins": [
     "woocommerce",
-    "slim-seo"
+    "slim-seo",
+    "code-snippets"
   ],
   "steps": [
     {
@@ -45,6 +46,16 @@
       "pluginData": {
         "resource": "wordpress.org/plugins",
         "slug": "wordpress-importer"
+      },
+      "options": {
+        "activate": true
+      }
+    },
+    {
+      "step": "installPlugin",
+      "pluginData": {
+        "resource": "wordpress.org/plugins",
+        "slug": "code-snippets"
       },
       "options": {
         "activate": true

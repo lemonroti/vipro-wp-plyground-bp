@@ -34,6 +34,7 @@ npx @wp-now/wp-now start --blueprint=blueprint.json
 |--------|-------------|
 | WooCommerce | E-commerce platform (setup wizard skipped) |
 | Slim SEO | Lightweight SEO optimization |
+| Code Snippets | Add custom PHP code snippets |
 | WordPress Importer | Data import support |
 
 ### Sample Products (15 total)
@@ -58,7 +59,7 @@ npx @wp-now/wp-now start --blueprint=blueprint.json
 
 ## Environment
 
-- PHP: 8.2
+- PHP: 8.3
 - WordPress: Latest
 - Networking: Enabled
 - Landing Page: `/wp-admin/`
